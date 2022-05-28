@@ -4,7 +4,7 @@ import axios from 'axios';
 
 function App() {
   const [username, setUsername] = useState("")
-  const [language, setLanguage] = useState([])
+  const [languages, setLanguages] = useState([])
 
   const handleChange = (event) => {
     const user = event.target.value
@@ -16,7 +16,7 @@ function App() {
     try {
       const repositories = await axios.get(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc`)
       const languagesArray = repositories.data.map((repo) => repo.language)
-      setLanguage(mostFrequent(languagesArray))
+      setLanguages(mostFrequent(languagesArray))
     } catch(error) {
       console.log(error)
     }
@@ -24,7 +24,9 @@ function App() {
 
   const mostFrequent = (languagesArray) => {
     const countObject = languageCount(languagesArray)
-    return Object.keys(countObject).reduce((a, b) => countObject[a] > countObject[b] ? a : b)
+    return Object.keys(countObject).filter(x => {
+      return countObject[x] === Math.max(...Object.values(countObject))
+    })
   }
 
   const languageCount = (languagesArray) => {
@@ -38,6 +40,10 @@ function App() {
     return count
   }
 
+  const mostFrequentLanguageArray = languages.map((language, index) => {
+    return <li key={index}>{language}</li>
+  })
+
   return (
     <div>
       <h2>Search by github username to find their favourite language</h2>
@@ -45,7 +51,11 @@ function App() {
         <input type="text" onChange={handleChange} value={username} placeholder="Username" />
         <button type="submit" onClick={handleSubmit}>Submit</button>
       </form>
-      <h4>{language}</h4>
+      {languages[0] &&
+        <ul>
+          {mostFrequentLanguageArray}  
+        </ul>
+      }
     </div>
   );
 }
