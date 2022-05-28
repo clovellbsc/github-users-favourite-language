@@ -136,3 +136,23 @@ test('returns the most used languages when there are multiple favourite language
   expect(ruby).toBeInTheDocument()
   expect(javascript).toBeInTheDocument()
 });
+
+test('where no data is returned it states on screen the user has no repositories', async () => {
+  const mockResponse = { 
+    data: []
+  }
+
+  mockAxios.get.mockResolvedValueOnce(mockResponse)
+
+  render(<App />);
+  const inputUsername = screen.getByPlaceholderText("Username")
+  const submitButton = screen.getByRole("button", { name: "Submit" })
+
+  userEvent.type(inputUsername, "clovellbsc")
+  userEvent.click(submitButton)
+
+  const languageHeader = await screen.findByText("There is no data for clovellbsc's languages")
+  
+  await waitFor(() => expect(screen.queryByRole("listitem")).toBeNull())
+  expect(languageHeader).toBeInTheDocument()
+});
