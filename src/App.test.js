@@ -198,3 +198,48 @@ test('render multiple favourite languages statement', async () => {
   
   expect(languageHeader).toBeInTheDocument()
 });
+
+test('This user does not exist displayed if a 404 error is returned from the request', async () => {
+  const mockResponse = { 
+    request: {
+      status: 404
+    }
+  }
+
+  mockAxios.get.mockRejectedValueOnce(mockResponse)
+
+  render(<App />);
+  const inputUsername = screen.getByPlaceholderText("Username")
+  const submitButton = screen.getByRole("button", { name: "Submit" })
+
+  userEvent.type(inputUsername, "clovellbsc")
+  userEvent.click(submitButton)
+
+  const languageHeader = await screen.findByText("This user does not exist")
+  
+  await waitFor(() => expect(screen.queryByRole("listitem")).toBeNull())
+  expect(languageHeader).toBeInTheDocument()
+});
+
+test('Error: error message returned if error other than 404', async () => {
+  const mockResponse = { 
+    message: "500 Internal Server Error",
+    request: {
+      status: 500
+    }
+  }
+
+  mockAxios.get.mockRejectedValueOnce(mockResponse)
+
+  render(<App />);
+  const inputUsername = screen.getByPlaceholderText("Username")
+  const submitButton = screen.getByRole("button", { name: "Submit" })
+
+  userEvent.type(inputUsername, "clovellbsc")
+  userEvent.click(submitButton)
+
+  const languageHeader = await screen.findByText("Error: 500 Internal Server Error")
+  
+  await waitFor(() => expect(screen.queryByRole("listitem")).toBeNull())
+  expect(languageHeader).toBeInTheDocument()
+});

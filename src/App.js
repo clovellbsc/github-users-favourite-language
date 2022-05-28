@@ -20,6 +20,7 @@ function App() {
       setLanguages(mostFrequent(languagesArray))
     } catch(error) {
       console.log(error)
+      error.request.status === 404 ? setLanguageHeader("This user does not exist") : setLanguageHeader(`Error: ${error.message}`)
     }
   }
 
