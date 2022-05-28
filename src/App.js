@@ -13,9 +13,13 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    const repositories = await axios.get(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc`)
-    const language = repositories.data[0].language
-    setLanguage(language)
+    try {
+      const repositories = await axios.get(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc`)
+      const returnedLanguage = repositories.data[0].language
+      setLanguage(returnedLanguage)
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   return (
