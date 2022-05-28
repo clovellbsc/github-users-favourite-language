@@ -1,12 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import App from './App';
+import FindFavouriteLanguage from './findFavouriteLanguage';
 import userEvent from '@testing-library/user-event'
 import mockAxios from 'axios'
 
 jest.mock("axios")
 
 test('renders learn react link', () => {
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
 
   expect(inputUsername).toBeInTheDocument()
@@ -21,7 +21,7 @@ test('returns JavaScript when one Javascript repository is returned', async () =
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -38,7 +38,7 @@ test('returns Ruby when one Ruby repository is returned', async () => {
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
 
   expect(inputUsername).toBeInTheDocument()
@@ -60,7 +60,7 @@ test('returns Ruby when Ruby is most used language in the returned repositories'
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -78,7 +78,7 @@ test('returns Ruby when Ruby is most used language but is not the first language
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -96,7 +96,7 @@ test('where a language returns null, this is ignored', async () => {
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -122,7 +122,7 @@ test('returns the most used languages when there are multiple favourite language
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -144,7 +144,7 @@ test('where no data is returned it states on screen the user has no repositories
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -162,7 +162,7 @@ test('render single favourite language statement', async () => {
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -187,7 +187,7 @@ test('render multiple favourite languages statement', async () => {
 
   mockAxios.get.mockResolvedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -208,7 +208,7 @@ test('This user does not exist displayed if a 404 error is returned from the req
 
   mockAxios.get.mockRejectedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 
@@ -231,7 +231,7 @@ test('Error: error message returned if error other than 404', async () => {
 
   mockAxios.get.mockRejectedValueOnce(mockResponse)
 
-  render(<App />);
+  render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username")
   const submitButton = screen.getByRole("button", { name: "Submit" })
 

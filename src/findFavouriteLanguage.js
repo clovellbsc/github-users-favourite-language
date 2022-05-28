@@ -1,8 +1,8 @@
-import './App.css';
+import './findFavouriteLanguage.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function App() {
+const FindFavouriteLanguage = () => {
   const [username, setUsername] = useState("")
   const [languages, setLanguages] = useState([])
   const [languageHeader, setLanguageHeader] = useState(null)
@@ -23,7 +23,7 @@ function App() {
       error.request.status === 404 ? setLanguageHeader("This user does not exist") : setLanguageHeader(`Error: ${error.message}`)
     }
   }
-
+  
   const mostFrequent = (languagesArray) => {
     const countObject = languageCount(languagesArray)
     return Object.keys(countObject).filter(x => {
@@ -33,10 +33,10 @@ function App() {
 
   const languageCount = (languagesArray) => {
     const count = {}
-    const results = languagesArray.filter(element => {
+    const languagesArrayWithoutNull = languagesArray.filter(element => {
       return element !== null;
     })
-    results.forEach((language) => {
+    languagesArrayWithoutNull.forEach((language) => {
       count[language] ? count[language] ++ :count[language] = 1
     })
     return count
@@ -58,11 +58,11 @@ function App() {
 
   useEffect(() => {
     setLanguageHeader((languageOrLanguages()))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [languages])
 
   return (
-    <div>
+    <div className="container" >
       <h2>Search by github username to find their favourite language</h2>
       <form>
         <input type="text" onChange={handleChange} value={username} placeholder="Username" />
@@ -78,4 +78,4 @@ function App() {
   );
 }
 
-export default App;
+export default FindFavouriteLanguage;
