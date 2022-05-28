@@ -46,7 +46,11 @@ function App() {
   })
 
   const languageOrLanguages = () => {
-    if (username && languages.length < 1) {
+    if (languages.length === 1) { 
+      return `${username}'s favourite language`
+    } else if (languages.length > 1) {
+      return `${username}'s favourite languages`
+    } else if (username && languages.length < 1) {
       return `There is no data for ${username}'s languages`
     }
   }

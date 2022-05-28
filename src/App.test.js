@@ -156,3 +156,45 @@ test('where no data is returned it states on screen the user has no repositories
   await waitFor(() => expect(screen.queryByRole("listitem")).toBeNull())
   expect(languageHeader).toBeInTheDocument()
 });
+
+test('render single favourite language statement', async () => {
+  const mockResponse = { data: [ {language: "JavaScript"} ] }
+
+  mockAxios.get.mockResolvedValueOnce(mockResponse)
+
+  render(<App />);
+  const inputUsername = screen.getByPlaceholderText("Username")
+  const submitButton = screen.getByRole("button", { name: "Submit" })
+
+  userEvent.type(inputUsername, "clovellbsc")
+  userEvent.click(submitButton)
+
+  const languageHeader = await screen.findByText("clovellbsc's favourite language")
+  
+  expect(languageHeader).toBeInTheDocument()
+});
+
+test('render multiple favourite languages statement', async () => {
+  const mockResponse = { 
+    data: [ 
+      {language: "Ruby"},
+      { language: "JavaScript"}, 
+      { language: "JavaScript"}, 
+      { language: "Ruby" }, 
+      { language: "Python" } 
+    ]
+  }
+
+  mockAxios.get.mockResolvedValueOnce(mockResponse)
+
+  render(<App />);
+  const inputUsername = screen.getByPlaceholderText("Username")
+  const submitButton = screen.getByRole("button", { name: "Submit" })
+
+  userEvent.type(inputUsername, "clovellbsc")
+  userEvent.click(submitButton)
+
+  const languageHeader = await screen.findByText("clovellbsc's favourite languages")
+  
+  expect(languageHeader).toBeInTheDocument()
+});
