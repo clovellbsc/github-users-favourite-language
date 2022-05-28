@@ -90,3 +90,21 @@ test('returns Ruby when Ruby is most used language but is not the first language
   await waitFor(() => expect(screen.queryByText("JavaScript")).not.toBeInTheDocument())
   expect(language).toBeInTheDocument()
 });
+
+test('where a language returns null, this is ignored', async () => {
+  const mockResponse = { data: [ {language: null}, { language: "JavaScript"}, {language: null} ] }
+
+  mockAxios.get.mockResolvedValueOnce(mockResponse)
+
+  render(<App />);
+  const inputUsername = screen.getByPlaceholderText("Username")
+  const submitButton = screen.getByRole("button", { name: "Submit" })
+
+  userEvent.type(inputUsername, "clovellbsc")
+  userEvent.click(submitButton)
+  
+  const language = await screen.findByText("JavaScript")
+  
+  await waitFor(() => expect(screen.queryByText("null")).not.toBeInTheDocument())
+  expect(language).toBeInTheDocument()
+});

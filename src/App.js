@@ -29,7 +29,10 @@ function App() {
 
   const languageCount = (languagesArray) => {
     const count = {}
-    languagesArray.forEach((language) => {
+    const results = languagesArray.filter(element => {
+      return element !== null;
+    })
+    results.forEach((language) => {
       count[language] ? count[language] ++ :count[language] = 1
     })
     return count
