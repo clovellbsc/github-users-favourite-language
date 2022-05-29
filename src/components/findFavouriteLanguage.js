@@ -1,4 +1,4 @@
-import './findFavouriteLanguage.css';
+import '../styling/findFavouriteLanguage.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 

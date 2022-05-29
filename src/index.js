@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import FindFavouriteLanguage from './findFavouriteLanguage';
+import './styling/index.css';
+import FindFavouriteLanguage from './components/findFavouriteLanguage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import FindFavouriteLanguage from './findFavouriteLanguage';
+import FindFavouriteLanguage from '../components/findFavouriteLanguage.js';
 import userEvent from '@testing-library/user-event'
 import mockAxios from 'axios'
 
@@ -242,4 +242,34 @@ test('Error: error message returned if error other than 404', async () => {
   
   await waitFor(() => expect(screen.queryByRole("listitem")).toBeNull())
   expect(languageHeader).toBeInTheDocument()
+});
+
+test('returns the correct values across multiple requests', async () => {
+  let mockResponse = { data: [ {language: "JavaScript"}, { language: "JavaScript"}, {language: "Ruby"} ] }
+
+  mockAxios.get.mockResolvedValueOnce(mockResponse)
+
+  render(<FindFavouriteLanguage />);
+  const inputUsername = screen.getByPlaceholderText("Username")
+  const submitButton = screen.getByRole("button", { name: "Submit" })
+
+  userEvent.type(inputUsername, "clovellbsc")
+  userEvent.click(submitButton)
+  
+  const language = await screen.findByText("JavaScript")
+  
+  await waitFor(() => expect(screen.queryByText("null")).not.toBeInTheDocument())
+  expect(language).toBeInTheDocument()
+  
+  mockResponse = { data: [ {language: "Ruby"}, { language: "JavaScript"}, {language: "Ruby"} ] }
+
+  mockAxios.get.mockResolvedValueOnce(mockResponse)
+
+  userEvent.type(inputUsername, "clovellbsc")
+  userEvent.click(submitButton)
+  
+  const newLanguage = await screen.findByText("JavaScript")
+  
+  await waitFor(() => expect(screen.queryByText("null")).not.toBeInTheDocument())
+  expect(newLanguage).toBeInTheDocument()
 });
