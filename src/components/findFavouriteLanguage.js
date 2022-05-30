@@ -1,6 +1,7 @@
 import "../styling/findFavouriteLanguage.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Form from "./form";
 
 const FindFavouriteLanguage = () => {
   const [username, setUsername] = useState("");
@@ -82,19 +83,13 @@ const FindFavouriteLanguage = () => {
   return (
     <div className="container">
       <h2>Search by github username to find their favourite language</h2>
-      <form>
-        <input
-          type="text"
-          onChange={handleChange}
-          value={username}
-          placeholder="Username"
-        />
-        <button type="submit" onClick={handleSubmit}>
-          Submit
-        </button>
-      </form>
+      <Form
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        username={username}
+      />
       <h4>{languageHeader}</h4>
-      {languages[0] && <ul>{mostFrequentLanguageArray}</ul>}
+      <ul>{mostFrequentLanguageArray}</ul>
     </div>
   );
 };
