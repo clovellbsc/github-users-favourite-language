@@ -69,7 +69,6 @@ This will run all the tests and produce a result like this:
 - Jest - unit and feature testing, including coverage
 - React Testing Library - library for testing React applications, which focuses on testing components from the end-user's experience
 - Axios - a promise-based HTTP Client
-- ESLint - linting
 
 ## My Approach
 
