@@ -5,7 +5,7 @@ import mockAxios from "axios";
 
 jest.mock("axios");
 
-test("renders learn react link", () => {
+test("ensuring form is rendered", () => {
   render(<FindFavouriteLanguage />);
   const inputUsername = screen.getByPlaceholderText("Username");
 
@@ -129,13 +129,13 @@ test("where a language returns null, this is ignored", async () => {
   expect(language).toBeInTheDocument();
 });
 
-test("returns the most used languages when there are multiple favourite languages", async () => {
+test("returns the most recently used languages when there are multiple favourite languages", async () => {
   const mockResponse = {
     data: [
       { language: "Ruby" },
-      { language: "JavaScript" },
-      { language: "JavaScript" },
       { language: "Ruby" },
+      { language: "JavaScript" },
+      { language: "JavaScript" },
       { language: "Python" },
     ],
   };
@@ -150,13 +150,14 @@ test("returns the most used languages when there are multiple favourite language
   userEvent.click(submitButton);
 
   const ruby = await screen.findByText("Ruby");
-  const javascript = await screen.findByText("JavaScript");
 
   await waitFor(() =>
     expect(screen.queryByText("Python")).not.toBeInTheDocument()
   );
+  await waitFor(() =>
+    expect(screen.queryByText("JavaScript")).not.toBeInTheDocument()
+  );
   expect(ruby).toBeInTheDocument();
-  expect(javascript).toBeInTheDocument();
 });
 
 test("where no data is returned it states on screen the user has no repositories", async () => {
@@ -200,33 +201,6 @@ test("render single favourite language statement", async () => {
   expect(languageHeader).toBeInTheDocument();
 });
 
-test("render multiple favourite languages statement", async () => {
-  const mockResponse = {
-    data: [
-      { language: "Ruby" },
-      { language: "JavaScript" },
-      { language: "JavaScript" },
-      { language: "Ruby" },
-      { language: "Python" },
-    ],
-  };
-
-  mockAxios.get.mockResolvedValueOnce(mockResponse);
-
-  render(<FindFavouriteLanguage />);
-  const inputUsername = screen.getByPlaceholderText("Username");
-  const submitButton = screen.getByRole("button", { name: "Submit" });
-
-  userEvent.type(inputUsername, "clovellbsc");
-  userEvent.click(submitButton);
-
-  const languageHeader = await screen.findByText(
-    "clovellbsc's favourite languages"
-  );
-
-  expect(languageHeader).toBeInTheDocument();
-});
-
 test("This user does not exist displayed if a 404 error is returned from the request", async () => {
   const mockResponse = {
     request: {
@@ -251,9 +225,13 @@ test("This user does not exist displayed if a 404 error is returned from the req
 
 test("Error: error message returned if error other than 404 or 400", async () => {
   const mockResponse = {
-    message: "500 Internal Server Error",
     request: {
       status: 500,
+    },
+    response: {
+      data: {
+        message: "500 Internal Server Error",
+      },
     },
   };
 

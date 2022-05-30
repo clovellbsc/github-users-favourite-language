@@ -5,7 +5,7 @@ import Form from "./form";
 
 const FindFavouriteLanguage = () => {
   const [username, setUsername] = useState("");
-  const [languages, setLanguages] = useState([]);
+  const [language, setLanguage] = useState("");
   const [languageHeader, setLanguageHeader] = useState(null);
 
   const handleChange = (event) => {
@@ -18,7 +18,6 @@ const FindFavouriteLanguage = () => {
     try {
       await handleRequest();
     } catch (error) {
-      console.log(error);
       handleError(error);
     }
   };
@@ -28,26 +27,29 @@ const FindFavouriteLanguage = () => {
       `https://api.github.com/users/${username}/repos?sort=updated&direction=desc`
     );
     const languagesArray = repositories.data.map((repo) => repo.language);
-    setLanguages(mostFrequent(languagesArray));
+    setLanguage(mostFrequent(languagesArray));
   };
 
   const handleError = (error) => {
+    console.log(error);
     setLanguageHeader(() => {
       if (error.request.status === 404) {
         return "This user does not exist";
       } else if (error.request.status === 400) {
         return "invalid username (github usernames can only contain alphanumeric characters and hyphens)";
       } else {
-        return `Error: ${error.message}`;
+        return `Error: ${error.response.data.message}`;
       }
     });
   };
 
   const mostFrequent = (languagesArray) => {
     const countObject = languageCount(languagesArray);
-    return Object.keys(countObject).filter((x) => {
-      return countObject[x] === Math.max(...Object.values(countObject));
-    });
+    const countArray = Object.keys(countObject);
+    if (countArray[0])
+      return countArray.reduce((a, b) =>
+        countObject[a] >= countObject[b] ? a : b
+      );
   };
 
   const languageCount = (languagesArray) => {
@@ -61,16 +63,10 @@ const FindFavouriteLanguage = () => {
     return count;
   };
 
-  const mostFrequentLanguageArray = languages.map((language, index) => {
-    return <li key={index}>{language}</li>;
-  });
-
   const languageOrLanguages = () => {
-    if (languages.length === 1) {
+    if (language) {
       return `${username}'s favourite language`;
-    } else if (languages.length > 1) {
-      return `${username}'s favourite languages`;
-    } else if (username && languages.length < 1) {
+    } else if (username) {
       return `There is no data for ${username}'s languages`;
     }
   };
@@ -78,7 +74,7 @@ const FindFavouriteLanguage = () => {
   useEffect(() => {
     setLanguageHeader(languageOrLanguages());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [languages]);
+  }, [language]);
 
   return (
     <div className="container">
@@ -89,7 +85,7 @@ const FindFavouriteLanguage = () => {
         username={username}
       />
       <h4>{languageHeader}</h4>
-      <ul>{mostFrequentLanguageArray}</ul>
+      <p>{language}</p>
     </div>
   );
 };
